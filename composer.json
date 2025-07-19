@@ -1,0 +1,14 @@
+{
+    "name": "odavi/test-erp",
+    "autoload": {
+        "psr-4": {
+            "Controller\\":"controller/",
+            "Model\\":"model/",
+            "View\\":"view/",
+            "Enum\\":"model/queries/",
+            "Entity\\":"entity/",
+            "Database\\":"db/"
+        }
+    },
+    "require": {}
+}
