@@ -3,7 +3,7 @@
 namespace Model;
 
 use Database\Connection;
-use Entity\product;
+use Entity\Product;
 use Enum\Queries;
 
 class ProductModel
@@ -14,7 +14,9 @@ class ProductModel
     {
         $this->connection = Connection::getInstance();
     }
-
+    /**
+     * @todo fazer a busca do estoque e possivelmente das variacoes
+     */
     public function getAllProducts(): ?array
     {
         $statement = $this->connection->prepare(Queries::SELECT_ALL_PRODUCTS);
@@ -32,5 +34,18 @@ class ProductModel
         }
 
         return $response ?? null;
+    }
+
+    /**
+     * @todo cadastrar estoque e possivelmente variacoes
+     */
+    public function insertProduct(Product $product): bool
+    {
+        $statement = $this->connection->prepare(Queries::INSERT_INTO_PRODUCTS);
+        $statement->bindValue(":product_name",$product->getName());
+        $statement->bindValue(":product_price", $product->getPrice());
+        $statement->bindValue(":product_variations", $product->getVariations());
+
+        return $statement->execute();
     }
 }

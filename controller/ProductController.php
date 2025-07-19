@@ -1,6 +1,7 @@
 <?php
 namespace Controller;
 
+use Entity\Product;
 use Model\ProductModel;
 
 class ProductController
@@ -14,5 +15,10 @@ class ProductController
     public function getAllProducts(): array
     {
         return $this->productModel->getAllProducts();
+    }
+
+    public function insertProduct(Product $product): bool
+    {
+        return $this->productModel->insertProduct($product);
     }
 }

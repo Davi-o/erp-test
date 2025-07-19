@@ -7,7 +7,7 @@ class Product
     private ?int $id = 0;
     private string $name;
     private float $price;
-    private string $variations;
+    private ?string $variations;
 
     public function __construct(
         ?int $id,
@@ -19,7 +19,7 @@ class Product
         !$id ?: $this->id = $id;
         $this->name = $name;
         $this->price = $price;
-        !$variations ?: $this->variations = $variations;
+        $this->variations = $variations;
     }
 
     public function getId(): int
@@ -37,7 +37,7 @@ class Product
         return $this->price;
     }
 
-    public function getVariations(): string
+    public function getVariations(): ?string
     {
         return $this->variations;
     }
