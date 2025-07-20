@@ -4,6 +4,7 @@ namespace Database;
 
 use Database\DatabaseConfiguration;
 use PDO;
+use PDOException;
 
 class Connection extends PDO
 {
@@ -11,8 +12,8 @@ class Connection extends PDO
     
     public function __construct(
         string $dsn,
-        string $user = null,
-        string $secret = null
+        string $user,
+        string $secret
     )
     {
         parent::__construct($dsn, $user, $secret);
@@ -22,10 +23,14 @@ class Connection extends PDO
     {
         if(! isset(self::$instance)){
             try {
-                self::$instance = new Connection("sqlite:".DatabaseConfiguration::PATH_TO_DB);
+                self::$instance = new Connection(
+                    DatabaseConfiguration::LOCALHOST,
+                    DatabaseConfiguration::USER,
+                    DatabaseConfiguration::SECRET
+                );
                 self::$instance->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            } catch (\Throwable $th) {
-                error_log($th, 3, "/var/tmp/erp-conn-err.log");
+            } catch (PDOException $e) {
+                error_log($e->getMessage() . PHP_EOL, 3, "/var/tmp/erp-conn-err.log");            
             }
         }    
         return self::$instance;
