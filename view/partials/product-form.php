@@ -1,6 +1,7 @@
 <form action="<?= htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="post" class="p-4 rounded bg-light shadow-sm">
 
-    <?php if (!empty($_POST['productId'])): ?>
+    <?php
+    if (!empty($_POST['productId'])): ?>
         <input type="hidden" name="productId" value="<?= htmlspecialchars((string) $productData['productId']) ?>">
         <input type="hidden" name="action" value="update">
     <?php endif; ?>

@@ -16,12 +16,19 @@ create table if not exists product_stock(
     constraint fk_product_stock foreign key (p_id) references product(product_id)
 );
 
+
 create table if not exists purchase(
     purchase_id integer primary key auto_increment not null,
-    p_id integer not null,
     purchase_total float,
-    purchase_shipping_fee float,
-    constraint fk_product_purchase foreign key (p_id) references product(product_id)
+    purchase_shipping_fee float
+);
+
+create table if not exists purchase_product(
+    purchase_product_id integer primary key auto_increment not null,
+    purchase_id int not null,
+    product_id int not null,
+    constraint fk_purchase foreign key (purchase_id) references purchase(purchase_id),
+    constraint fk_product foreign key (product_id) references product(product_id)
 );
 
 create table if not exists discount(

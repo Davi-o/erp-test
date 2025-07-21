@@ -21,6 +21,10 @@ class Queries
 
     const SELECT_PRODUCT_BY_ID = self::SELECT_ALL_PRODUCTS." where p.product_id = :product_id";
 
+    const SELECT_ALL_PURCHASES = "
+        select * from purchase
+    ";
+
     const INSERT_INTO_PRODUCT = "insert into product values(null, :product_name, :product_price, :product_variations)";
     const INSERT_INTO_PRODUCT_STOCK = "insert into product_stock values(null, :product_id, :product_quantity)";
 

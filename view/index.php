@@ -3,10 +3,8 @@ declare(strict_types=1);
 
 require_once '../vendor/autoload.php';
 
-use Controller\ProductController;
 use Entity\Product;
-
-$productController = new ProductController();
+use Controller\ProductController;
 
 $errors = [];
 $productData = [
@@ -17,11 +15,9 @@ $productData = [
     'productVariations' => ''
 ];
 
-$isPost = $_SERVER['REQUEST_METHOD'] === 'POST';
-$action = $_POST['action'] ?? '';
-
-if ($isPost) {
-    switch ($action) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $productController = new ProductController();
+    switch ($_POST['action']) {
         case 'load_edit_form':
             if (!empty($_POST['productId'])) {
                 $product = $productController->getProduct((int)$_POST['productId']);
@@ -56,7 +52,7 @@ if ($isPost) {
             }
 
             if (empty($errors)) {
-                if ($action === 'update' && $productData['productId']) {
+                if ($_POST['action'] === 'update' && $productData['productId']) {
                     $success = $productController->updateProduct(new Product(
                         $productData['productId'],
                         $productData['productName'],
@@ -73,6 +69,7 @@ if ($isPost) {
                         $productData['productQuantity']
                     ));
                 }
+
                 if ($success) {
                     header('Location: ../index.php');
                     exit;
@@ -93,5 +90,7 @@ if ($isPost) {
 $pageTitle = $productData['productId'] ? 'Editar Produto' : 'Criar Produto';
 
 include 'partials/header.php';
+include 'partials/cart-handler.php';
 include 'partials/product-form.php';
+include 'partials/shopping-cart.php';
 include 'partials/footer.php';
