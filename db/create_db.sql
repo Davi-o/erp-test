@@ -27,6 +27,7 @@ create table if not exists purchase_product(
     purchase_product_id integer primary key auto_increment not null,
     purchase_id int not null,
     product_id int not null,
+    product_quantity int not null,
     constraint fk_purchase foreign key (purchase_id) references purchase(purchase_id),
     constraint fk_product foreign key (product_id) references product(product_id)
 );

@@ -31,6 +31,11 @@ class Purchase
         return $this->products;
     }
 
+    public function setProducts(?array $products)
+    {
+        $this->products = $products;
+    }
+
     public function getTotal(): float
     {
         return $this->total;

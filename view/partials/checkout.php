@@ -1,69 +1,80 @@
 <?php
+declare(strict_types=1);
 
-if (empty($_SESSION['cart'])) {
-    header('Location: index.php');
-    exit;
+require_once 'vendor/autoload.php';
+
+use Controller\PurchaseController;
+
+$successMessage = '';
+$error = '';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_order'])) {
+    try {
+        $controller = new PurchaseController();
+        $purchaseId = $controller->createPurchase($_SESSION['cart']);
+
+        $successMessage = "Pedido #$purchaseId finalizado com sucesso!";
+        unset($_SESSION['cart']);
+    } catch (Exception $e) {
+        $error = $e->getMessage();
+    }
 }
 
 $subtotal = 0;
+if (!empty($_SESSION['cart'])) {
+    foreach ($_SESSION['cart'] as $item) {
+        $subtotal += $item['product_price'] * $item['quantity'];
+    }
 
-foreach ($_SESSION['cart'] as $item) {
-    $subtotal += $item['price'] * $item['quantity'];
+    $shippingFee = ($subtotal > 200) ? 0 : (($subtotal >= 52 && $subtotal <= 166.59) ? 15 : 20);
+    $total = $subtotal + $shippingFee;
 }
-
-if ($subtotal > 200) {
-    $frete = 0;
-} elseif ($subtotal >= 52 && $subtotal <= 166.59) {
-    $frete = 15;
-} else {
-    $frete = 20;
-}
-
-$total = $subtotal + $frete;
 ?>
 
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Resumo do Pedido</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <title>Checkout</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
 </head>
 <body class="container mt-5">
     <h2>Resumo do Pedido</h2>
 
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Produto</th>
-                <th>Quantidade</th>
-                <th>Subtotal</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($_SESSION['cart'] as $item): ?>
+    <?php if ($error): ?>
+        <div class="alert alert-danger"><?= $error ?></div>
+    <?php elseif (!empty($_SESSION['cart'])): ?>
+        <table class="table table-bordered">
+            <thead>
                 <tr>
-                    <td><?= htmlspecialchars($item['name']) ?></td>
-                    <td><?= $item['quantity'] ?></td>
-                    <td>R$ <?= number_format($item['price'] * $item['quantity'], 2, ',', '.') ?></td>
+                    <th>Produto</th>
+                    <th>Quantidade</th>
+                    <th>Subtotal</th>
                 </tr>
-            <?php endforeach; ?>
-        </tbody>
-        <tfoot>
-            <tr>
-                <td colspan="2">Frete</td>
-                <td>R$ <?= number_format($frete, 2, ',', '.') ?></td>
-            </tr>
-            <tr>
-                <td colspan="2"><strong>Total</strong></td>
-                <td><strong>R$ <?= number_format($total, 2, ',', '.') ?></strong></td>
-            </tr>
-        </tfoot>
-    </table>
+            </thead>
+            <tbody>
+                <?php foreach ($_SESSION['cart'] as $item): ?>
+                    <tr>
+                        <td><?= htmlspecialchars($item['product_name']) ?></td>
+                        <td><?= $item['quantity'] ?></td>
+                        <td>R$ <?= number_format($item['product_price'] * $item['quantity'], 2, ',', '.') ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+            <tfoot>
+                <tr><td colspan="2">Frete</td><td>R$ <?= number_format($shippingFee, 2, ',', '.') ?></td></tr>
+                <tr><td colspan="2"><strong>Total</strong></td><td><strong>R$ <?= number_format($total, 2, ',', '.') ?></strong></td></tr>
+            </tfoot>
+        </table>
 
-    <form action="finalizar.php" method="post">
-        <button type="submit" class="btn btn-success">Finalizar Pedido</button>
-        <a href="index.php" class="btn btn-secondary">Voltar</a>
-    </form>
+        <form method="post">
+            <input type="hidden" name="create_order" value="1">
+            <button class="btn btn-success">Finalizar Pedido</button>
+            <a href="index.php" class="btn btn-secondary">Voltar</a>
+        </form>
+    <?php else: ?>
+        <div class="alert alert-info">Carrinho vazio.</div>
+        <a href="index.php" class="btn btn-primary">Voltar</a>
+    <?php endif; ?>
 </body>
 </html>
