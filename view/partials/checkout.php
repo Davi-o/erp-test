@@ -5,16 +5,16 @@ require_once 'vendor/autoload.php';
 
 use Controller\PurchaseController;
 
-$successMessage = '';
 $error = '';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_order'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_order'] )) {
     try {
         $controller = new PurchaseController();
         $purchaseId = $controller->createPurchase($_SESSION['cart']);
-
-        $successMessage = "Pedido #$purchaseId finalizado com sucesso!";
+        
         unset($_SESSION['cart']);
+        $_SESSION['checkout'] = 'success';
+        header('Location: ../../index.php');
     } catch (Exception $e) {
         $error = $e->getMessage();
     }
@@ -55,7 +55,7 @@ if (!empty($_SESSION['cart'])) {
             <tbody>
                 <?php foreach ($_SESSION['cart'] as $item): ?>
                     <tr>
-                        <td><?= htmlspecialchars($item['product_name']) ?></td>
+                        <td><?= $item['product_name'] ?></td>
                         <td><?= $item['quantity'] ?></td>
                         <td>R$ <?= number_format($item['product_price'] * $item['quantity'], 2, ',', '.') ?></td>
                     </tr>

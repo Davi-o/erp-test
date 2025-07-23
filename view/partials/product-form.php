@@ -1,8 +1,8 @@
-<form action="<?= htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="post" class="p-4 rounded bg-light shadow-sm">
+<form action="<?= $_SERVER['PHP_SELF'] ?>" method="post" class="p-4 rounded bg-light shadow-sm">
 
     <?php
     if (!empty($_POST['productId'])): ?>
-        <input type="hidden" name="productId" value="<?= htmlspecialchars((string) $productData['productId']) ?>">
+        <input type="hidden" name="productId" value="<?= $productData['productId'] ?>">
         <input type="hidden" name="action" value="update">
     <?php endif; ?>
     <?php if (empty($_POST['productId'])): ?>
@@ -16,11 +16,11 @@
             class="form-control <?= isset($errors['productName']) ? 'is-invalid' : '' ?>" 
             name="productName" 
             id="productName" 
-            value="<?= htmlspecialchars($productData['productName']) ?>" 
+            value="<?= $productData['productName'] ?>" 
             required
         >
         <?php if (isset($errors['productName'])): ?>
-            <div class="invalid-feedback"><?= htmlspecialchars($errors['productName']) ?></div>
+            <div class="invalid-feedback"><?= $errors['productName'] ?></div>
         <?php endif; ?>
     </div>
 
@@ -31,11 +31,11 @@
             class="form-control <?= isset($errors['productPrice']) ? 'is-invalid' : '' ?>" 
             name="productPrice" 
             id="productPrice" 
-            value="<?= htmlspecialchars((string) $productData['productPrice']) ?>" 
+            value="<?= $productData['productPrice'] ?>" 
             required
         >
         <?php if (isset($errors['productPrice'])): ?>
-            <div class="invalid-feedback"><?= htmlspecialchars($errors['productPrice']) ?></div>
+            <div class="invalid-feedback"><?= $errors['productPrice'] ?></div>
         <?php endif; ?>
     </div>
 
@@ -46,10 +46,10 @@
             class="form-control <?= isset($errors['productQuantity']) ? 'is-invalid' : '' ?>" 
             name="productQuantity" 
             id="productQuantity" 
-            value="<?= htmlspecialchars((string) $productData['productQuantity']) ?>"
+            value="<?= $productData['productQuantity'] ?>"
         >
         <?php if (isset($errors['productQuantity'])): ?>
-            <div class="invalid-feedback"><?= htmlspecialchars($errors['productQuantity']) ?></div>
+            <div class="invalid-feedback"><?= $errors['productQuantity'] ?></div>
         <?php endif; ?>
     </div>
 
@@ -60,7 +60,7 @@
             class="form-control" 
             name="productVariations" 
             id="productVariations" 
-            value="<?= htmlspecialchars($productData['productVariations']) ?>"
+            value="<?= $productData['productVariations'] ?>"
         >
     </div>
 

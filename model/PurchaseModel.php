@@ -10,6 +10,7 @@ use Enum\Queries;
 class PurchaseModel
 {
     private Connection $connection;
+    private ProductModel $productModel;
     
     public function __construct()
     {
@@ -70,6 +71,7 @@ class PurchaseModel
 
     public function createPurchase(array $cart, float $total, float $shipping): int
     {
+        $productModel = new ProductModel();
         try {
             $this->connection->beginTransaction();
 
@@ -88,9 +90,11 @@ class PurchaseModel
                 $purchaseProduct->bindValue(":purchase_id", $purchaseId);
                 $purchaseProduct->bindValue(":product_id", $productId);
                 $purchaseProduct->bindValue(":quantity", $item['quantity']);
+                
+                $productToUpdate = $productModel->getProduct($productId);
 
                 $productStock->bindValue(":product_id", $productId);
-                $productStock->bindValue(":product_quantity", $item['quantity']);
+                $productStock->bindValue(":product_quantity", $productToUpdate->getQuantity() - $item['quantity']);
                 if(!($purchaseProduct->execute() && $productStock->execute())){
                     throw new \Exception("Failed to create purchase.");
                 }

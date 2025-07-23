@@ -6,7 +6,7 @@ use Controller\ProductController;
 $productController = new ProductController();
 $products = $productController->getAllProducts();
 
-if(count($products)>0):
+if(count($products) > 0):
     foreach ($products as $product):  ?>
         <form action="view/index.php" method="post" id="editProduct-<?= $product->getId() ?>">
             <input type="hidden" name="action" value="load_edit_form">
@@ -20,10 +20,10 @@ if(count($products)>0):
             <input type="hidden" name="productId" value="<?= $product->getId() ?>" form="editProduct-<?= $product->getId() ?>">
             <input type="hidden" name="productId" value="<?= $product->getId() ?>" form="deleteProduct-<?= $product->getId() ?>">
 
-            <td><?= htmlspecialchars($product->getName()) ?></td>
-            <td><?= htmlspecialchars($product->getPrice()) ?></td>
-            <td><?= htmlspecialchars($product->getVariations()) ?></td>
-            <td><?= htmlspecialchars($product->getQuantity()) ?></td>
+            <td><?= $product->getName() ?></td>
+            <td><?= $product->getPrice() ?></td>
+            <td><?= $product->getVariations() ?></td>
+            <td><?= $product->getQuantity() ?></td>
             <td>
                 <button type="submit" form="editProduct-<?= $product->getId() ?>" class="btn btn-info">Editar</button>
                 <button type="submit" form="deleteProduct-<?= $product->getId() ?>" class="btn btn-danger">Apagar</button>
